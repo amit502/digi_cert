@@ -13,6 +13,7 @@ from . import TransactionData
 from .errors import *
 from Naked.toolshed.shell import execute_js, muterun_js
 from . import issuer_contract
+import os
 headers = {
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
 
@@ -238,7 +239,8 @@ def get_issuer_info(certificate_model):
     if certificate_model.issuer.id!=ipfs_hash_from_contract:
         print("hey")
         sys.exit("The ipfs hash of the issuer is  not valid!!!!");
-    response = muterun_js('E:/Git/cert-viewer/cert_viewer/static/js/file.js',ipfs_hash_from_contract)
+    path=os.path.join(os.getcwd(), 'cert_viewer/static/js/file.js')
+    response = muterun_js(path,ipfs_hash_from_contract)
     if response.exitcode == 0:
       issuer_json=response.stdout
       issuer_json=issuer_json.decode("utf-8") 

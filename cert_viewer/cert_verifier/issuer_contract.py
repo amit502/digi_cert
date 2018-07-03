@@ -1,6 +1,7 @@
 import time
 from web3 import Web3, HTTPProvider
 import json
+import os
 
 w3 = Web3(HTTPProvider('https://ropsten.infura.io/WY2IpmvumcQOxVcCxUW4'))
 contract_address     = w3.toChecksumAddress('0xb61548acf3dc857c7de51da73c3748ab8ba54313')
@@ -10,7 +11,8 @@ wallet_address       = w3.toChecksumAddress('0x37f5257621fe96835bbb49e453e3db374
 
 
 w3.eth.enable_unaudited_features()
-with open("E:/Git/cert-viewer/cert_viewer/cert_verifier/mycontract.json") as f:
+path=os.path.join(os.getcwd(),'cert_viewer/cert_verifier/mycontract.json')
+with open(path) as f:
     info_json = json.load(f)
 abi = info_json["abi"]
 contract=w3.eth.contract(address=contract_address,abi=abi)

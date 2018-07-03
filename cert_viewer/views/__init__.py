@@ -316,14 +316,16 @@ def add_rules(app,config):
             logopath=p.issuer_logo_file
             logopath=logopath.replace("/","\\")
             logopath=logopath[1:]
-            print(logopath)         
-            script=['python',"create_v2_issuer.py",'-c',"E:/Git/cert-viewer/cert_tools/conf.ini",'-k',pubkey,'-r',"To be updated",'-d',"akjbf",'--data_dir',"cert_viewer",'-m',logopath,'-o',p.user+".json"]
+            print(logopath)
+            path=os.path.join(os.getcwd(),'cert_tools/conf.ini')         
+            script=['python',"create_v2_issuer.py",'-c',path,'-k',pubkey,'-r',"To be updated",'-d',"akjbf",'--data_dir',"cert_viewer",'-m',logopath,'-o',p.user+".json"]
             status=subprocess.call(script,shell=True)
             print("status:",status)
             if not status:
                 with open(p.user+".json") as f:
                     data = json.load(f)
-                response = muterun_js('E:/Git/cert-viewer/cert_viewer/static/js/store.js',p.user)
+                path=os.path.join(os.getcwd(),'cert_viewer/static/js/store.js')
+                response = muterun_js(path,p.user)
                 print("response:",response.stdout)
                 if response.exitcode==0:
                     hash_value=response.stdout
@@ -357,12 +359,14 @@ def add_rules(app,config):
             signaturepath=p.issuer_signature_file
             signaturepath=signaturepath.replace("/","\\")
             signaturepath=signaturepath[1:]
-            print(signaturepath)         
-            script=['python',"create_v2_certificate_template.py",'-c',"E:/Git/cert-viewer/cert_tools/conf.ini",'--issuer_public_key',pubkey,'-r',"To be updated",'-d',"akjbf",'--data_dir',"cert_viewer",'--issuer_logo_file',logopath,'--cert_image_file',imagepath,'--issuer_signature_file',signaturepath,'--issuer_url',"https://www.ioe.edu.np",'--issuer_name',p.name,'--issuer_id',p.issuer_id,'--issuer_key',"pqrst",'--certificate_title',"Certificate of Achievement",'--criteria_narrative',p.criteria_narrative,'--badge_id',p.badge_id,'--issuer_signature_lines',"Signature of TU"]
+            print(signaturepath)
+            path=os.path.join(os.getcwd(),'cert_tools/conf.ini')         
+            script=['python',"create_v2_certificate_template.py",'-c',path,'--issuer_public_key',pubkey,'-r',"To be updated",'-d',"akjbf",'--data_dir',"cert_viewer",'--issuer_logo_file',logopath,'--cert_image_file',imagepath,'--issuer_signature_file',signaturepath,'--issuer_url',"https://www.ioe.edu.np",'--issuer_name',p.name,'--issuer_id',p.issuer_id,'--issuer_key',"pqrst",'--certificate_title',"Certificate of Achievement",'--criteria_narrative',p.criteria_narrative,'--badge_id',p.badge_id,'--issuer_signature_lines',"Signature of TU"]
             status1=subprocess.call(script,shell=True)
             print("status1:",status1)
             if not status1:
-                script=['python',"instantiate_v2_certificate_batch.py",'-c',"E:/Git/cert-viewer/cert_tools/conf.ini",'--data_dir',"cert_viewer",'--roster',"rosters\\"+p.user+".csv",'--no-clobber','False']
+                path=os.path.join(os.getcwd(),'cert_tools/conf.ini')
+                script=['python',"instantiate_v2_certificate_batch.py",'-c',path,'--data_dir',"cert_viewer",'--roster',"rosters\\"+p.user+".csv",'--no-clobber','False']
                 status2=subprocess.call(script,shell=True)
                 if not status2:
                     script=['python',"cert_issuer/__main__.py",'--issuing_address',p.issuer_public_key,'--usb_name',"G:",'--key_file',"private.txt",'--chain',"ethereum_ropsten"]
