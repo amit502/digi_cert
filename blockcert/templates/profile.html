@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+    <link rel="stylesheet" href="../static/css/blockcert.css">
+{% block content %}
+    <div class="container">
+    <div class="row">
+    <div class="col-md-3">
+        <div class="card">
+            <img src="https://www.w3schools.com/w3images/team2.jpg" alt="John" style="width:100%">
+            <div class="card-body">
+          <h1 class="card-title">John Doe</h1>
+          <p class="title">CEO & Founder, Example</p>
+          <p>Harvard University</p>
+          <a href="#"><i class="fas fa-android"></i></a>
+          <a href="#"><i class="fas fa-twitter"></i></a>
+          <a href="#"><i class="fas fa-linkedin"></i></a>
+          <a href="#"><i class="fas fa-facebook"></i></a>
+            </div>
+            <div class="card-footer text-muted text-center">
+           <button type="submit" style="margin-top: 20px" class="btn btn-primary btn-block">Contact</button>
+            </div>
+            </div>
+    </div>
+    <div class="col-md-9 jumbotron">
+        <ul class="list-group">
+            <li class="list-group-item">Name: {{ person.get_full_name }}</li>
+            <li class="list-group-item">URL: {{ person.profile.issuer_url }}</li>
+            <li class="list-group-item">Email: {{ person.profile.issuer_email }}</li>
+            <li class="list-group-item">ID: {{ person.profile.issuer_id }}</li>
+            <li class="list-group-item">Revocation List: {{ person.profile.revocation_list }}</li>
+            <li class="list-group-item">Public Key: {{ person.profile.issuer_public_key }}</li>
+            <li class="list-group-item">Badge ID: {{ person.profile.badge_id }}</li>
+            <li class="list-group-item">Logo: {{person.profile.issuer_logo_file.url}} </li>
+            <li class="list-group-item">Certificate Image: {{person.profile.cert_image_file.url}} </li>
+            <li class="list-group-item">Signature: {{ person.profile.issuer_signature_file.url }}</li>
+        </ul>
+    </div>
+    </div>
+    </div>
+    {% endblock %}

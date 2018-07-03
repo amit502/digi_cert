@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+    <link rel="stylesheet" href="../static/css/blockcert.css">
+ {% block content %}
+  <div class="col-md-9 jumbotron">
+        <ul class="list-group">
+            <li class="list-group-item">Name: {{ current_user.name }}</li>
+            <li class="list-group-item">URL: {{ current_user.issuer_url }}</li>
+            <li class="list-group-item">Email: {{ current_user.issuer_email }}</li>
+            <li class="list-group-item">ID: {{ current_user.issuer_id }}</li>
+            <li class="list-group-item">Revocation List: {{ current_user.revocation_list }}</li>
+            <li class="list-group-item">Public Key: {{ current_user.issuer_public_key }}</li>            
+            <li class="list-group-item">Logo: {{current_user.issuer_logo_file}} </li>
+            <li class="list-group-item">Certificate Image: {{current_user.cert_image_file}} </li>
+            <li class="list-group-item">Signature: {{ current_user.issuer_signature_file }}</li>
+        </ul>
+    </div>
+    <p class='text-danger'></p>
+    {% from "_formhelpers.html" import render_field %}
+        <form method="POST" action="" enctype="multipart/form-data">
+        <div class="jumbotron">
+    
+        
+        {% for field in form %}
+        {{ field.label_tag }}
+        {{ render_field(field,class="form-control") }}
+            {% endfor %}
+
+        </div>
+        
+        </form>
+      {% endblock %}

@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div>
+        <!doctype html>
+    <title>Upload new File</title>
+    <h1>Upload New Logo</h1>
+    <form method=post enctype=multipart/form-data>
+      <p><input type=file name=file accept="image/*" onchange="loadFile(event)">
+   
+    <input type=submit value=Upload>
+    </form>
+    <script>
+
+    </script>
+    <img >
+
+    </div>
+<img id="output"/>
+<script>
+  var loadFile = function(event) {
+    var reader = new FileReader();
+    reader.onload = function(){
+      var output = document.getElementById('output');
+      output.src = reader.result;
+    };
+    reader.readAsDataURL(event.target.files[0]);
+  };
+</script>
+{% endblock %}

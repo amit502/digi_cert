@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div>
+        <!doctype html>
+    <title>Upload new Certificate Image</title>
+    <h1>Upload New Certificate Image</h1>
+    <form method=post enctype=multipart/form-data accept="image/*" onchange="loadFile(event)">
+      <p><input type=file name=file>
+   
+    
+         <input type=submit value=Upload>
+    </form>
+    <img id="output"/>
+<script>
+  var loadFile = function(event) {
+    var reader = new FileReader();
+    reader.onload = function(){
+      var output = document.getElementById('output');
+      output.src = reader.result;
+    };
+    reader.readAsDataURL(event.target.files[0]);
+  };
+</script>
+
+    </div>
+
+{% endblock %}

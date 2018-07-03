@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+    <div>
+        <form method="POST" action="" enctype="multipart/form-data">
+        <div class="jumbotron">
+             {% csrf_token %}
+         {% for field in user_form %}
+        {{ field.label_tag }}
+        {% render_field field class="form-control"%}
+            {% endfor %}
+        {% for field in profile_form %}
+        {{ field.label_tag }}
+        {% render_field field class="form-control"%}
+            {% endfor %}
+        </div>
+            <input class="btn btn-primary" type="submit">
+        </form>
+    </div>
+
+{% endblock %}

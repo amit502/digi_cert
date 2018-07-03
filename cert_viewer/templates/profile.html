@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+    <link rel="stylesheet" href="../static/css/blockcert.css">
+{% block content %}
+    <div class="container">
+    <div class="row">
+    <div class="col-md-3">
+        <div class="card">
+            <img src="{{current_user.issuer_logo_file}}" alt="John" style="width:100%">
+            <div class="card-body">
+          <h1 class="card-title">{{current_user.name}}</h1>
+          <p class="title">{{current_user.issuer_email}}</p>
+          <p>{{current_user.issuer_url}}</p>
+          <a href="#"><i class="fas fa-android"></i></a>
+          <a href="#"><i class="fas fa-twitter"></i></a>
+          <a href="#"><i class="fas fa-linkedin"></i></a>
+          <a href="#"><i class="fas fa-facebook"></i></a>
+            </div>
+            <div class="card-footer text-muted text-center">
+           <button type="submit" style="margin-top: 20px" class="btn btn-primary btn-block">Contact</button>
+            </div>
+            </div>
+    </div>
+    <div class="col-md-9 jumbotron">
+        <ul class="list-group">
+            <li class="list-group-item">Name: {{ current_user.name }}</li>
+            <li class="list-group-item">URL: {{ current_user.issuer_url }}</li>
+            <li class="list-group-item">Email: {{ current_user.issuer_email }}</li>
+            <li class="list-group-item">ID: {{ current_user.issuer_id }}</li>
+            <li class="list-group-item">Revocation List: {{ current_user.revocation_list }}</li>
+            <li class="list-group-item">Public Key: {{ current_user.issuer_public_key }}</li>
+            <li class="list-group-item">Badge ID: {{ current_user.badge_id }}</li>
+            <li class="list-group-item">Logo: {{current_user.issuer_logo_file}} </li>
+            <li class="list-group-item">Certificate Image: {{current_user.cert_image_file}} </li>
+            <li class="list-group-item">Signature: {{ current_user.issuer_signature_file }}</li>
+        </ul>
+    </div>
+    </div>
+    </div>
+    {% endblock %}
