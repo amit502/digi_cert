@@ -48,7 +48,10 @@ class Profile(UserMixin,db.Model):
 		return False
 	def get_id(self):
 		return unicode(self.user)'''
-	
+
+	def as_dict(self):
+		return {'name': self.name}
+
 	def __repr__(self):
         	return self.user
 @login_manager.user_loader

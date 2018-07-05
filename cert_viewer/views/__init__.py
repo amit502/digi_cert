@@ -1,6 +1,8 @@
 import logging
 import os
 import datetime
+import json
+import pdb
 from os import listdir
 from os.path import isfile, join
 from flask import jsonify, redirect
@@ -115,10 +117,17 @@ def add_rules(app,config):
         # load registration template
         return render_template('/signup.html', form=form)
 
+    @app.route('/autocomplete', methods=['GET'])
+    def autocomplete():
+        search = request.args.get('q')
+        query = Profile.query.filter(Profile.name.like('%' + str(search) + '%'))
+        results = [mv[0] for mv in query.all()]
+        return jsonify(matching_results=results)
 
     @app.route('/')
     def home():         
         return render_template('base.html')
+
     @app.route('/login',methods=['GET', 'POST'])
     def login():
         form = LoginForm(request.form)
