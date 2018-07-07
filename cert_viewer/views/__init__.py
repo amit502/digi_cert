@@ -119,10 +119,8 @@ def add_rules(app,config):
 
     @app.route('/autocomplete', methods=['GET'])
     def autocomplete():
-        search = request.args.get('q')
-        print(search)        
-        query = db.session.query(Profile.name).filter(Profile.name.like('%' + str(search) + '%'))
-        print(query.count())
+        search = request.args.get('q')       
+        query = db.session.query(Profile.user).filter(Profile.user.like('%' + str(search) + '%'))
         results = [mv[0] for mv in query.all()]
         return jsonify(matching_results=results)
 
@@ -163,14 +161,18 @@ def add_rules(app,config):
         return redirect('/')   
                 
        
-    @app.route('/profile')
-    @login_required
-    def profile():
-        return render_template('profile.html')
+    @app.route('/profile/<username>')
+    def profile(username):
+        p = Profile.query.filter_by(user = username)
+        p = p.first()
+        person = p.user
+        print(person)
+        return render_template('profile.html', person = person)
+
     @app.route('/logo',methods=['GET', 'POST'])
     @login_required
     def logo():
-        p=Profile.query.filter_by(user=session['user']).first()
+        p=Profile.query.filter_by(user=session['user']).sfirst()
         #form=LogoUpload(request.form)
 
         if request.method == 'POST':

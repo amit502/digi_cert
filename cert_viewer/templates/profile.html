@@ -22,10 +22,10 @@
     </div>
     <div class="col-md-9 jumbotron">
         <ul class="list-group">
-            <li class="list-group-item">Name: {{ current_user.name }}</li>
-            <li class="list-group-item">URL: {{ current_user.issuer_url }}</li>
-            <li class="list-group-item">Email: {{ current_user.issuer_email }}</li>
-            <li class="list-group-item">ID: {{ current_user.issuer_id }}</li>
+            <li class="list-group-item">Name: {{ person.name }}</li>
+            <li class="list-group-item">URL: {{ person.issuer_url }}</li>
+            <li class="list-group-item">Email: {{ person.issuer_email }}</li>
+            <li class="list-group-item">ID: {{ person.issuer_id }}</li>
             <li class="list-group-item">Revocation List: {{ current_user.revocation_list }}</li>
             <li class="list-group-item">Public Key: {{ current_user.issuer_public_key }}</li>
             <li class="list-group-item">Badge ID: {{ current_user.badge_id }}</li>
