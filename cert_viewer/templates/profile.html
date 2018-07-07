@@ -1,19 +1,21 @@
 {% extends 'base.html' %}
     <link rel="stylesheet" href="../static/css/blockcert.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+
 {% block content %}
     <div class="container">
     <div class="row">
     <div class="col-md-3">
         <div class="card">
-            <img src="{{current_user.issuer_logo_file}}" alt="John" style="width:100%">
+            <img src="{{person.issuer_logo_file}}" alt="John" style="width:100%">
             <div class="card-body">
-          <h1 class="card-title">{{current_user.name}}</h1>
-          <p class="title">{{current_user.issuer_email}}</p>
-          <p>{{current_user.issuer_url}}</p>
-          <a href="#"><i class="fas fa-android"></i></a>
-          <a href="#"><i class="fas fa-twitter"></i></a>
-          <a href="#"><i class="fas fa-linkedin"></i></a>
-          <a href="#"><i class="fas fa-facebook"></i></a>
+          <h1 class="card-title">{{person.name}}</h1>
+          <p class="title">{{person.issuer_email}}</p>
+          <p>{{person.issuer_url}}</p>
+          <a href="#"><sppan class="fa fa-android"></i></a>
+          <a href="#"><span class="fa fa-twitter"></i></a>
+          <a href="#"><span class="fa fa-linkedin"></i></a>
+          <a href="#"><span class="fa fa-facebook"></i></a>
             </div>
             <div class="card-footer text-muted text-center">
            <button type="submit" style="margin-top: 20px" class="btn btn-primary btn-block">Contact</button>
@@ -26,12 +28,12 @@
             <li class="list-group-item">URL: {{ person.issuer_url }}</li>
             <li class="list-group-item">Email: {{ person.issuer_email }}</li>
             <li class="list-group-item">ID: {{ person.issuer_id }}</li>
-            <li class="list-group-item">Revocation List: {{ current_user.revocation_list }}</li>
-            <li class="list-group-item">Public Key: {{ current_user.issuer_public_key }}</li>
-            <li class="list-group-item">Badge ID: {{ current_user.badge_id }}</li>
-            <li class="list-group-item">Logo: {{current_user.issuer_logo_file}} </li>
-            <li class="list-group-item">Certificate Image: {{current_user.cert_image_file}} </li>
-            <li class="list-group-item">Signature: {{ current_user.issuer_signature_file }}</li>
+            <li class="list-group-item">Revocation List: {{ person.revocation_list }}</li>
+            <li class="list-group-item">Public Key: {{ person.issuer_public_key }}</li>
+            <li class="list-group-item">Badge ID: {{ person.badge_id }}</li>
+            <li class="list-group-item">Logo: {{person.issuer_logo_file}} </li>
+            <li class="list-group-item">Certificate Image: {{person.cert_image_file}} </li>
+            <li class="list-group-item">Signature: {{ person.issuer_signature_file }}</li>
         </ul>
     </div>
     </div>
