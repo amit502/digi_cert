@@ -138,10 +138,10 @@ def add_rules(app,config):
                 login_user(p)
                 session['user']=p.user
                 flash('Login Successsful')
-                return redirect('/profile')
+                return redirect('/profile/'+p.user)
             return render_template('/login.html',form=form)
-        return render_template('/login.html',form=form) 
-
+        return render_template('/login.html',form=form)
+    
     @app.route('/uploads/<filename>')
     def uploaded_file(filename):
         return send_from_directory(app.config['UPLOAD_FOLDER'],
@@ -165,7 +165,7 @@ def add_rules(app,config):
     def profile(username):
         p = Profile.query.filter_by(user = username)
         p = p.first()
-        person = p.user
+        person = p
         print(person)
         return render_template('profile.html', person = person)
 

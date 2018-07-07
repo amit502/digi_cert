@@ -61,7 +61,7 @@ $(function() {
         {{ current_user.user }}
         </a>
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="/profile">Profile</a>
+          <a class="dropdown-item" href="/profile/{{ current_user.user }}">Profile</a>
           <a class="dropdown-item" href="/logout">Logout</a>
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" href="/updateProfile">Update Profile</a>
@@ -69,8 +69,8 @@ $(function() {
         </div>
       </li>
           {% else %}
-              <li class="nav-item"><a class="nav-link" href="login"><span class="fa fa-sign-in-alt"></span> Login</a></li>
-            <li class="nav-item"><a class="nav-link" href="signup"><span class="fa fa-user"></span> Sign Up</a></li>
+              <li class="nav-item"><a class="nav-link" href="/login"><span class="fa fa-sign-in-alt"></span> Login</a></li>
+            <li class="nav-item"><a class="nav-link" href="/signup"><span class="fa fa-user"></span> Sign Up</a></li>
 
            {% endif %}
       </ul>
