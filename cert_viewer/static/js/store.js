@@ -22,7 +22,8 @@ const ipfs = require("nano-ipfs-store").at("https://ipfs.infura.io:5001");
 //var hash="zb2rhnXSBvFwDDPwcfyRMrBbGArkpmTJ4yBjZShcbrAcT5wHX";
 var user=process.argv[2];
 var fs = require('fs');
-var data = JSON.parse(fs.readFileSync('E:/Git/cert-viewer/'+user+'.json', 'utf8'));
+var path=require('path');
+var data = JSON.parse(fs.readFileSync(path.join(process.cwd(),user+'.json'), 'utf8'));
 ( async () => {
 
  const doc = JSON.stringify(data)

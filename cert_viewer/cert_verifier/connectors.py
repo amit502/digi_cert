@@ -235,12 +235,13 @@ def get_field_or_default(data, field_name):
 
 def get_issuer_info(certificate_model):
     #issuer_json = get_remote_json(certificate_model.issuer.id)
-    ipfs_hash_from_contract=issuer_contract.get_hash();
-    if certificate_model.issuer.id!=ipfs_hash_from_contract:
+    #ipfs_hash_from_contract=;
+    if not int(issuer_contract.get(certificate_model.issuer.id)):
         print("hey")
-        sys.exit("The ipfs hash of the issuer is  not valid!!!!");
+        sys.exit("The ipfs hash of the issuer is  not valid!!!!")
+    print("contract success")
     path=os.path.join(os.getcwd(), 'cert_viewer/static/js/file.js')
-    response = muterun_js(path,ipfs_hash_from_contract)
+    response = muterun_js(path,certificate_model.issuer.id)
     if response.exitcode == 0:
       issuer_json=response.stdout
       issuer_json=issuer_json.decode("utf-8") 
@@ -268,7 +269,8 @@ def get_issuer_info(certificate_model):
         if 'publicKey' in issuer_json:
             for public_key in issuer_json['publicKey']:
                 pk = public_key['id'][len(PUBKEY_PREFIX):]
-                created = get_field_or_default(public_key, 'created')
+                print("pk=",pk)
+                created = get_field_or_default(public_key, 'created')                
                 expires = get_field_or_default(public_key, 'expires')
                 revoked = get_field_or_default(public_key, 'revoked')
                 issuer_keys.append(IssuerKey(pk, created, expires, revoked))

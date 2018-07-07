@@ -3,7 +3,7 @@
 		"constant": false,
 		"inputs": [
 			{
-				"name": "_value",
+				"name": "s",
 				"type": "string"
 			}
 		],
@@ -15,12 +15,31 @@
 	},
 	{
 		"constant": true,
-		"inputs": [],
+		"inputs": [
+			{
+				"name": "hash",
+				"type": "string"
+			}
+		],
 		"name": "get",
 		"outputs": [
 			{
 				"name": "",
-				"type": "string"
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getNumberMessages",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
 			}
 		],
 		"payable": false,

@@ -141,7 +141,7 @@ def add_rules(app,config):
                 return redirect('/profile/'+p.user)
             return render_template('/login.html',form=form)
         return render_template('/login.html',form=form)
-    
+
     @app.route('/uploads/<filename>')
     def uploaded_file(filename):
         return send_from_directory(app.config['UPLOAD_FOLDER'],
@@ -172,7 +172,7 @@ def add_rules(app,config):
     @app.route('/logo',methods=['GET', 'POST'])
     @login_required
     def logo():
-        p=Profile.query.filter_by(user=session['user']).sfirst()
+        p=Profile.query.filter_by(user=session['user']).first()
         #form=LogoUpload(request.form)
 
         if request.method == 'POST':
@@ -331,7 +331,7 @@ def add_rules(app,config):
             logopath=logopath[1:]
             print(logopath)
             path=os.path.join(os.getcwd(),'cert_tools/conf.ini')         
-            script=['python',"create_v2_issuer.py",'-c',path,'-k',pubkey,'-r',"To be updated",'-d',"akjbf",'--data_dir',"cert_viewer",'-m',logopath,'-o',p.user+".json"]
+            script=['python',"create_v2_issuer.py",'-c',path,'--issuer_public_key',pubkey,'-r',"To be updated",'-d',"akjbf",'--data_dir',"cert_viewer",'-m',logopath,'-o',p.user+".json"]
             status=subprocess.call(script,shell=True)
             print("status:",status)
             if not status:
@@ -344,7 +344,7 @@ def add_rules(app,config):
                     hash_value=response.stdout
                     p.issuer_id=hash_value.decode("UTF-8")
                     db.session.commit()
-                    return redirect('/profile')
+                    return redirect('/profile/'+p.user)
                 else:
                     return response.stderr.decode("utf-8")
                 
@@ -382,7 +382,9 @@ def add_rules(app,config):
                 script=['python',"instantiate_v2_certificate_batch.py",'-c',path,'--data_dir',"cert_viewer",'--roster',"rosters\\"+p.user+".csv",'--no-clobber','False']
                 status2=subprocess.call(script,shell=True)
                 if not status2:
-                    script=['python',"cert_issuer/__main__.py",'--issuing_address',p.issuer_public_key,'--usb_name',"G:",'--key_file',"private.txt",'--chain',"ethereum_ropsten"]
+                    address=p.issuer_public_key
+                    address=address.split(":")                    
+                    script=['python',"cert_issuer/__main__.py",'--issuing_address',address[1],'--usb_name',"G:",'--key_file',"private.txt",'--chain',"ethereum_ropsten"]
                     status3=subprocess.call(script,shell=True)
                     if not status3:
                         return redirect('/profile')

@@ -4,7 +4,7 @@ import json
 import os
 
 w3 = Web3(HTTPProvider('https://ropsten.infura.io/WY2IpmvumcQOxVcCxUW4'))
-contract_address     = w3.toChecksumAddress('0xb61548acf3dc857c7de51da73c3748ab8ba54313')
+contract_address     = w3.toChecksumAddress('0x6adfdc4f2a3cffaaa3106d0a197cda8ea7723e8b')
 wallet_private_key   = '5077f71a0dda695f8c1f1ea9b8f69e0800541f23b1f61e0cb67148e715167901'
 wallet_address       = w3.toChecksumAddress('0x37f5257621fe96835bbb49e453e3db37428b8a55')
 
@@ -18,16 +18,16 @@ abi = info_json["abi"]
 contract=w3.eth.contract(address=contract_address,abi=abi)
 
 
-def get_hash():
+def get(value):
 
     nonce = w3.eth.getTransactionCount(wallet_address)
 
-    txn_dict = contract.functions.get().call()
+    txn_dict = contract.functions.get(value).call()
 
     
     return txn_dict
 
-def set_hash(value):
+def set(value):
     nonce = w3.eth.getTransactionCount(wallet_address)
 
     txn_dict = contract.functions.set(value).buildTransaction({
@@ -59,8 +59,8 @@ def set_hash(value):
     
     return tx_receipt
 
-#print(set_hash("zb2rhnXSBvFwDDPwcfyRMrBbGArkpmTJ4yBjZShcbrAcT5wHX"))
-#print(get_hash())
+#print(set("zb2rhnXSBvFwDDPwcfyRMrBbGArkpmTJ4yBjZShcbrAcT5wHX"))
+#print(get("zb2rhnXSBvFwDDPwcfyRMrBbGArkpmTJ4yBjZShcbrAcT5wHX"))
 
     
 
