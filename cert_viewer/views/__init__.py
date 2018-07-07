@@ -120,7 +120,9 @@ def add_rules(app,config):
     @app.route('/autocomplete', methods=['GET'])
     def autocomplete():
         search = request.args.get('q')
-        query = Profile.query.filter(Profile.name.like('%' + str(search) + '%'))
+        print(search)        
+        query = db.session.query(Profile.name).filter(Profile.name.like('%' + str(search) + '%'))
+        print(query.count())
         results = [mv[0] for mv in query.all()]
         return jsonify(matching_results=results)
 
