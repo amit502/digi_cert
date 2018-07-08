@@ -5,16 +5,21 @@ class IntroStore(object):
     def insert(self, intro):    	    	
         self.intro_db.introductions.insert_one(intro)
         print(intro)
-        j=str(intro['_id'])
+        '''j=str(intro['_id'])
         #j=j[10:-2]
-        intro['_id']=j
-        print(intro)
+        intro['_id']=j'''
         o=[]
+        o.append(intro['firstName']+' '+intro['lastName'])
+        o.append('ecdsa-koblitz-pubkey:'+intro['ethereumAddress'])
+        o.append(intro['email'])
+        print(o)
+        '''o=[]
         for x in intro:
-        	o.append(intro[x])
+        	o.append(intro[x])'''
         from . import app
-        fileName=app.config['THEME']
-        fileName='rosters\\'+fileName+'.csv'
+        #path=
+        fileName='amit'
+        fileName='cert_viewer\\rosters\\'+fileName+'.csv'
         import csv
         csv.register_dialect('myDialect',quoting=csv.QUOTE_ALL,skipinitialspace=True)
         with open(fileName, 'a') as f:

@@ -13,7 +13,7 @@ from cert_viewer import certificate_store_bridge
 from cert_viewer import introduction_store_bridge
 from cert_viewer import verifier_bridge
 from cert_viewer import certificate_formatter
-from cert_viewer.forms import LoginForm,RegistrationForm,ProfileForm,LogoUpload,IssuerForm,IdentityForm
+from cert_viewer.forms import LoginForm,RegistrationForm,ProfileForm,LogoUpload,IssuerForm,IdentityForm,AdminForm
 #from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from cert_viewer.alchemy import  Profile
@@ -25,6 +25,13 @@ from flask import send_from_directory
 from werkzeug.utils import secure_filename
 from Naked.toolshed.shell import execute_js, muterun_js
 import json
+import zipfile
+import io
+import pathlib
+import shutil
+
+download=0
+
 
 def update_app_config(app, config):
     app.config.update(
@@ -56,7 +63,11 @@ def render(template, **context):
 def configure_views(app, config):
     update_app_config(app, config)
     add_rules(app, config)
-
+def zipdir(path, ziph):
+    # ziph is zipfile handle
+    for root, dirs, files in os.walk(path):
+        for file in files:
+            ziph.write(os.path.join(root, file))
 
 from flask.views import View
 
@@ -73,6 +84,13 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+def get_zip():
+    zipf = zipfile.ZipFile('Certificates.zip', 'w', zipfile.ZIP_DEFLATED)
+    path=os.path.join(os.getcwd(),'cert_viewer/blockchain_certificates')
+    zipdir(path, zipf)
+    zipf.close()
+    #return redirect('/profile/amit')         
+    #get_zip()    
 
 def add_rules(app,config):
     from cert_viewer.views.award_view import AwardView
@@ -85,6 +103,9 @@ def add_rules(app,config):
 
     update_app_config(app, config)
     app.url_map.converters['regex'] = RegexConverter
+    
+
+
 
     @app.route('/signup', methods=['GET', 'POST'])
     def signup():
@@ -102,7 +123,7 @@ def add_rules(app,config):
             db.session.add(p)
             db.session.commit()
             import csv
-            fileName="cert_viewer\\rosters"+p.user+".csv"
+            fileName="cert_viewer\\rosters\\"+p.user+".csv"
             o=["name","pubkey","identity"]
             csv.register_dialect('myDialect',quoting=csv.QUOTE_ALL,skipinitialspace=True)
             with open(fileName, 'w') as f:
@@ -142,6 +163,15 @@ def add_rules(app,config):
             return render_template('/login.html',form=form)
         return render_template('/login.html',form=form)
 
+    @app.route('/files')
+    def get_file():
+        """Download a file."""
+        global download
+        download=0
+        get_zip()        
+        return send_from_directory(os.getcwd(),"Certificates.zip", as_attachment=True)
+        
+
     @app.route('/uploads/<filename>')
     def uploaded_file(filename):
         return send_from_directory(app.config['UPLOAD_FOLDER'],
@@ -167,7 +197,26 @@ def add_rules(app,config):
         p = p.first()
         person = p
         print(person)
-        return render_template('profile.html', person = person)
+        print("download=",download)
+          
+        return render_template('profile.html', person = person,download=download)
+    @app.route('/admin',methods=['GET', 'POST'])
+    def admin():
+        response=0
+        form=AdminForm(request.form)
+        if form.validate_on_submit():
+            if form.username.data=='admin' and form.password.data=='password':
+                '''p=Profile.query.filter_by(issuer_id = form.ipfs_hash.data)
+                print(p)
+                print("count:",p.count())
+                if p.count()==1:'''
+                from cert_viewer.cert_verifier import issuer_contract
+                response=issuer_contract.set(form.ipfs_hash.data)
+                return render_template('admin.html',form=form,response=response)
+                #else:
+
+          
+        return render_template('admin.html',form=form,response=response)
 
     @app.route('/logo',methods=['GET', 'POST'])
     @login_required
@@ -271,7 +320,7 @@ def add_rules(app,config):
 
     @app.route('/updateProfile',methods=['GET', 'POST'])
     @login_required
-    def profile_update():
+    def profile_update():                
         p=Profile.query.filter_by(user=session['user']).first()
         form = ProfileForm(request.form)
                     
@@ -354,8 +403,26 @@ def add_rules(app,config):
 
     @app.route('/issue_certs',methods=['GET', 'POST'])
     @login_required
-
     def issue_certs():
+
+        folder = os.path.join(os.getcwd(),'cert_viewer/blockchain_certificates')
+        for the_file in listdir(folder):
+            file_path = os.path.join(folder, the_file)
+            try:
+                if os.path.isfile(file_path):
+                    os.unlink(file_path)
+                #elif os.path.isdir(file_path): shutil.rmtree(file_path)
+            except Exception as e:
+                print(e)
+        folder = os.path.join(os.getcwd(),'cert_viewer/unsigned_certificates')
+        for the_file in listdir(folder):
+            file_path = os.path.join(folder, the_file)
+            try:
+                if os.path.isfile(file_path):
+                    os.unlink(file_path)
+                #elif os.path.isdir(file_path): shutil.rmtree(file_path)
+            except Exception as e:
+                print(e)  
         form=IssuerForm(request.form)
         p=Profile.query.filter_by(user=session['user']).first()        
         if form.validate_on_submit():
@@ -375,6 +442,7 @@ def add_rules(app,config):
             print(signaturepath)
             path=os.path.join(os.getcwd(),'cert_tools/conf.ini')         
             script=['python',"create_v2_certificate_template.py",'-c',path,'--issuer_public_key',pubkey,'-r',"To be updated",'-d',"akjbf",'--data_dir',"cert_viewer",'--issuer_logo_file',logopath,'--cert_image_file',imagepath,'--issuer_signature_file',signaturepath,'--issuer_url',"https://www.ioe.edu.np",'--issuer_name',p.name,'--issuer_id',p.issuer_id,'--issuer_key',"pqrst",'--certificate_title',"Certificate of Achievement",'--criteria_narrative',p.criteria_narrative,'--badge_id',p.badge_id,'--issuer_signature_lines',"Signature of TU"]
+            print(script)
             status1=subprocess.call(script,shell=True)
             print("status1:",status1)
             if not status1:
@@ -387,10 +455,21 @@ def add_rules(app,config):
                     script=['python',"cert_issuer/__main__.py",'--issuing_address',address[1],'--usb_name',"G:",'--key_file',"private.txt",'--chain',"ethereum_ropsten"]
                     status3=subprocess.call(script,shell=True)
                     if not status3:
-                        return redirect('/profile')
+                        global download
+                        download=1
+                        import csv
+                        fileName="cert_viewer\\rosters\\"+p.user+".csv"
+                        o=["name","pubkey","identity"]
+                        csv.register_dialect('myDialect',quoting=csv.QUOTE_ALL,skipinitialspace=True)
+                        with open(fileName, 'w') as f:
+                            writer = csv.writer(f, dialect='myDialect')
+                            writer.writerow(o)
+                        f.close()
+                        return redirect('/profile/'+p.user)
                     return "Issuing failed but certificates created successfully"
                 return "Error in instantiating"
             return render_template("cert_issuer.html",form=form)
+        return render_template("cert_issuer.html",form=form)
         return render_template("cert_issuer.html",form=form)
 
 

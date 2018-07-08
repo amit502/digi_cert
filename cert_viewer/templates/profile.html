@@ -38,4 +38,11 @@
     </div>
     </div>
     </div>
+    {% if download==1 %}
+    <script>
+      
+        window.location.href = "http://localhost:5000/files";
+      
+    </script>
+    {% endif %}
     {% endblock %}

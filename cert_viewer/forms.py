@@ -72,6 +72,18 @@ class ProfileForm(FlaskForm):
     #submit = SubmitField('Register')
 
  
+class AdminForm(FlaskForm):
+    username = StringField(
+        'username', [
+            validators.required(), validators.length(
+                max=200)])
+    password = PasswordField(
+        'password', [
+            validators.required()])
+    ipfs_hash=StringField(
+        'ipfs_hash', [
+            validators.required(), validators.length(
+                max=200)])
 class LoginForm(Form):
     username = StringField(
         'username', [
