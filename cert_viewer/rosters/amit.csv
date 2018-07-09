@@ -1,5 +1,3 @@
-name,pubkey,identity
-Amit Patel,ecdsa-koblitz-pubkey:0x3786598u84u58998u84444444449uut398u98u98ut,patelamyt@gmail.com
-Sujeet KC,ecdsa-koblitz-pubkey:0x4454kjnjkbsdgbh858y68y8ybBBKJHJK,sujeetkc@gmail.com
-"ManishJC","ecdsa-koblitz-pubkey:0xc1fA3a30Ae5c92eb473367281fC608C05123c6Fb","manish@gmail.com"
-"Mahesh Sharma","ecdsa-koblitz-pubkey:0xc1fA3a30Ae5c92eb473367281fC608C05123c6Fb","mahesh@gmail.com"
+"name","pubkey","identity"
+"Sunil Sharma","ecdsa-koblitz-pubkey:0xc1fA3a30Ae5c92eb473367281fC608C05123c6Fb","sunil@gmail.com"
+"Ram Maharjan","ecdsa-koblitz-pubkey:0xc1fA3a30Ae5c92eb473367281fC608C05123c6Fb","ram@gmail.com"

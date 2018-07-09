@@ -89,12 +89,23 @@ $(function() {
                 
             </div>
               <div class="row justify-content-center">
-                  <form class="form-inline">
+                <script>
+                  var loadFile = function(event) {
+                  var reader = new FileReader();
+                  reader.onload = function(){
+                  var output = document.getElementById('output');
+                  output.src = reader.result;
+                  };
+                  reader.readAsDataURL(event.target.files[0]);
+                  };
+                  </script>
+                  <form method="post" class="form-inline" enctype="multipart/form-data" accept="image/*" onchange="loadFile(event)">
                       <div class="form-group">
-                          <input style="width: 500px; height: 50px;" class="form-control" placeholder="Credential Url .....">
+                          <input style="width: 500px; height: 50px;" type="file" name="file" class="form-control" placeholder="Credential Url .....">
                       </div>
                       <span class="form-group-append">
-                          <button class="btn btn-primary" style="height: 50px;">Verify</button>
+                          <!--<button class="btn btn-primary" style="height: 50px;" type="submit">Go To Verify</button>-->
+                          <input class="btn btn-primary" style="height: 50px;" type="submit" value="Go To Verify">
                       </span>
                     </form>
               </div>

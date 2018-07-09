@@ -79,7 +79,10 @@ class GenericView(View):
         super(GenericView, self).__init__()
 
     def dispatch_request(self):
-        return render(self.template)
+        p = Profile.query.filter_by(user = session['selected_issuer'])
+        p = p.first()
+        person = p
+        return render(self.template , person=person)
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -145,8 +148,38 @@ def add_rules(app,config):
         results = [mv[0] for mv in query.all()]
         return jsonify(matching_results=results)
 
-    @app.route('/')
-    def home():         
+    @app.route('/', methods=['GET', 'POST'])
+    def home():
+        if session.get('selected_issuer') is not None:
+            session.pop('selected_issuer',None)
+        folder = os.path.join(os.getcwd(),'cert_data')
+        for the_file in listdir(folder):
+            file_path = os.path.join(folder, the_file)
+            try:
+                if the_file.endswith(".json"):
+                    os.unlink(file_path)
+                #elif os.path.isdir(file_path): shutil.rmtree(file_path)
+            except Exception as e:
+                print(e)
+        if request.method == 'POST':
+            # check if the post request has the file part
+            if 'file' not in request.files:
+                print("no file part")
+                flash('No file part')
+                return redirect('/')
+            file = request.files['file']
+            # if user does not select file, browser also
+            # submit a empty part without filename
+            if file.filename == '':
+                print("no file")
+                flash('No selected file')
+                return redirect('/')
+            if file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)      
+                               
+                file.save(os.path.join(os.getcwd(),'cert_data',filename)) 
+                parts=filename.split('.')               
+                return redirect('/'+parts[0])         
         return render_template('base.html')
 
     @app.route('/login',methods=['GET', 'POST'])
@@ -198,7 +231,7 @@ def add_rules(app,config):
         person = p
         print(person)
         print("download=",download)
-          
+        session['selected_issuer']=username 
         return render_template('profile.html', person = person,download=download)
     @app.route('/admin',methods=['GET', 'POST'])
     def admin():

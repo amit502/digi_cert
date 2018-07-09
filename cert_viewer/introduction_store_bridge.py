@@ -18,7 +18,8 @@ class IntroStore(object):
         	o.append(intro[x])'''
         from . import app
         #path=
-        fileName='amit'
+        from flask import session
+        fileName=session['selected_issuer']
         fileName='cert_viewer\\rosters\\'+fileName+'.csv'
         import csv
         csv.register_dialect('myDialect',quoting=csv.QUOTE_ALL,skipinitialspace=True)

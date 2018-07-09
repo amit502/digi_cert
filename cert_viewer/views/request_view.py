@@ -9,12 +9,18 @@ from cert_viewer import helpers
 from cert_viewer.forms import BitcoinForm, SimpleRegistrationForm
 from cert_viewer.notifier import Notifier
 from cert_viewer.views.__init__ import render
+from flask import session
+from cert_viewer.alchemy import  Profile
 
 TEMPLATE = 'request.html'
 
 class RequestView(MethodView):
     def post(self):
-        recipient_form = SimpleRegistrationForm(request.form)        
+        recipient_form = SimpleRegistrationForm(request.form)
+        p = Profile.query.filter_by(user = session['selected_issuer'])
+        p = p.first()
+        person = p
+        print(person)        
         if recipient_form.validate():            
             user_data = recipient_form.to_user_data()
             from cert_viewer import introduction_store_bridge
@@ -39,12 +45,15 @@ class RequestView(MethodView):
             return redirect(url_for('index'))
         else:
             bitcoin_form = BitcoinForm(request.form)            
-            return render(TEMPLATE, form=recipient_form, registered=False, bitcoin=bitcoin_form)
+            return render(TEMPLATE, form=recipient_form, registered=False, bitcoin=bitcoin_form , person=person)
 
     def get(self):
         """Request an introduction. Forwarding to intro endpoint for backcompat"""
 
         recipient_form = SimpleRegistrationForm(request.form)
         bitcoin_form = BitcoinForm(request.form)
+        p = Profile.query.filter_by(user = session['selected_issuer'])
+        p = p.first()
+        person = p
 
-        return render(TEMPLATE, form=recipient_form, registered=False, bitcoin=bitcoin_form)
+        return render(TEMPLATE, form=recipient_form, registered=False, bitcoin=bitcoin_form, person=person)

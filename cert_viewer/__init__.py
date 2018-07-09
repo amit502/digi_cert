@@ -12,7 +12,7 @@ from werkzeug.utils import secure_filename
 from flask import Flask, request, redirect, url_for
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 UPLOAD_FOLDER = BASE_DIR+"\cert_viewer\static\img"
-ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif','json'])
 
 login_manager = LoginManager()
 
