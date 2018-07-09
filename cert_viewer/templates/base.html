@@ -37,9 +37,10 @@ $(function() {
   <body>
 
     {% block body %}
+    
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top justify-content-between">
             <a class="navbar-brand" href="/home">BlockCert</a>
-    }
+
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -48,7 +49,7 @@ $(function() {
       <ul class="navbar-nav ml-auto">
       <form class="form-inline mr-1">
               <div class="input-group">
-              <input type="text" id="autocomplete" class="form-control" placeholder="Search....." aria-label="Recipient's username" aria-describedby="basic-addon2">
+              <input type="text" id="autocomplete" class="form-control" placeholder="Search Issuers....." aria-label="Recipient's username" aria-describedby="basic-addon2">
               <div class="input-group-append">
                 <button class="btn fa fa-search " style="background: white" id="basic-addon2"></button>
               </div>
@@ -76,9 +77,63 @@ $(function() {
       </ul>
   </div>
 </nav>
+
+
   <div class="container">
     {% block content %}
+    <div class="row h-100 justify-content-center align-items-center">
+      <div class="col-md-12">
+          <div class="jumbotron align-items-center" style="height: 80vh;">
+            <div class="row h-50 justify-content-center align-items-center">
+                <h2 class="display-4">Verify Your Credentials</h2><br>
+                
+            </div>
+              <div class="row justify-content-center">
+                  <form class="form-inline">
+                      <div class="form-group">
+                          <input style="width: 500px; height: 50px;" class="form-control" placeholder="Credential Url .....">
+                      </div>
+                      <span class="form-group-append">
+                          <button class="btn btn-primary" style="height: 50px;">Verify</button>
+                      </span>
+                    </form>
+              </div>
+          </div>
+      </div>
 
+      </div>
+        
+    
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Card title</h5>
+                    <p class="card-text">Some quick example text to build on the card title</p>
+                    <a href="#" class="card-link">Another link</a>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Card title</h5>
+                    <p class="card-text">Some quick example text to build on the card title</p>
+                    <a href="#" class="card-link">Another link</a>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Card title</h5>
+                    <p class="card-text">Some quick example text to build on the card title</p>
+                    <a href="#" class="card-link">Another link</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     {% endblock %}
   </div>
 {% endblock body %}
@@ -86,7 +141,53 @@ $(function() {
 </html>
 
 <style>
-    body{
-        padding-top: 100px;
-    }
+ .card{
+   margin-bottom: 50px;
+ }
+.form-control{
+  width: 100%;
+}
+.form-group {
+    position: relative;
+}
+   .overlay{
+ position: absolute;
+ min-height: 100%;
+ min-width: 100%;
+ left: 0;
+ top: 0;
+ background: rgba(85, 83, 83, 0.79);
+}
+.header{
+ background-image: url('../static/img/headerback.jpg');
+ background-attachment: fixed;
+ background-size: cover;
+ background-position: center;
+}
+
+.description{
+    position: absolute;
+    top: 30%;
+    margin: auto;
+    padding: 2em;
+}
+.description h1{
+ color:rgb(255, 255, 255) ;
+}
+.description p{
+ color:#666;
+ font-size: 20px;
+ width: 50%;
+ line-height: 1.5;
+}
+.description button{
+ border:1px  solid #F97300;
+ background:#F97300;
+ color:#fff;
+}
 </style>
+<script>
+  $(document).ready(function(){
+ $('.header').height($(window).height());
+})
+</script>
