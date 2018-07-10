@@ -1,8 +1,30 @@
 {% extends 'base.html' %}
     <link rel="stylesheet" href="../static/css/blockcert.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
  {% block content %}
-  <div class="col-md-9 jumbotron">
-        <ul class="list-group">
+ <script>
+    $(document).ready(function(){
+    sendRequest();
+    function sendRequest(){
+      $.ajax({
+        url: "/logger",
+        success: 
+          function(data){
+           $('#log').html(data); //insert text of test.php into your div
+           
+        },
+        complete: function() {
+       // Schedule the next request when the current one's complete
+       setInterval(sendRequest, 10000); // The interval set to 5 seconds
+     }
+    });
+  };
+});
+</script>
+ 
+ 
+  <div class="jumbotron">
+        <!--<ul class="list-group">
             <li class="list-group-item">Name: {{ current_user.name }}</li>
             <li class="list-group-item">URL: {{ current_user.issuer_url }}</li>
             <li class="list-group-item">Email: {{ current_user.issuer_email }}</li>
@@ -12,17 +34,47 @@
             <li class="list-group-item">Logo: {{current_user.issuer_logo_file}} </li>
             <li class="list-group-item">Certificate Image: {{current_user.cert_image_file}} </li>
             <li class="list-group-item">Signature: {{ current_user.issuer_signature_file }}</li>
-        </ul>
+        </ul>-->
+    <table class="table table-striped table-dark table-hover ">
+        <tr>
+      <th scope="col">#</th>
+      <th scope="col">Name</th>
+      <th scope="col">Ethereum Public Key</th>
+      <th scope="col">Email</th>
+      
+    </tr>
+    {% for item in req_list %}
+    <!--<span onclick=test_func({{ item|safe }});>{{ item }}</span>-->
+    
+    
+    <tr scope="row">
+         <td>{{ item['num'] }}</td>       
+        <td>{{ item['name'] }}</td>
+        <td>{{ item['pubkey'] }}</td>
+        <td>{{ item['email'] }}</td>
+        <td class="col-md-2" align="right"><div class="btn-group pull-right"><a title="Edit" id="edit" class="btn btn-primary btn-xs edit-button" href="/edit/{{ item['email'] }}">Edit</a></div></td> 
+        <td class="col-md-2"><div class="btn-group pull-right"><a title="Delete" class="btn btn-danger btn-xs delete-button" id="delete" href="delete/{{ item['email'] }}">Delete</a></div></td> 
+
+        
+    </tr>       
+    {% endfor %}
+    <tr>
+
+      <th scope="col"><div class="btn-group pull-right"><a title="Edit" id="edit" class="btn btn-primary btn-xs" href="/add">Add Recipient</a></div></th>     
+      
+    </tr>
+    </table>
     </div>
-    <p class='text-danger'></p>
+
+    <p class='text-info' id="log"></p>
     {% from "_formhelpers.html" import render_field %}
         <form method="POST" action="" enctype="multipart/form-data">
-        <div class="jumbotron">
+        <div class="jumbotron" style="color:green">
     
         
         {% for field in form %}
         {{ field.label_tag }}
-        {{ render_field(field,class="form-control") }}
+        {{ render_field(field,class="form-control",style="background-color:green; color:white;") }}
             {% endfor %}
 
         </div>

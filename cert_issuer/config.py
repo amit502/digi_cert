@@ -1,5 +1,6 @@
 import logging
 import os
+import sys
 
 
 import configargparse
@@ -95,6 +96,8 @@ def get_config():
         raise UnknownChainError(parsed_config.chain.name)
 
     logging.info('This run will try to issue on the %s chain', parsed_config.chain.name)
+    sys.stdout = open("log.txt", "w")
+    print('This run will try to issue on the %s chain', parsed_config.chain.name)
 
     if parsed_config.chain.blockchain_type == BlockchainType.bitcoin:
         bitcoin_chain_for_python_bitcoinlib = parsed_config.chain

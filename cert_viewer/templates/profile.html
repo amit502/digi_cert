@@ -3,7 +3,8 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
 
 {% block content %}
-    <div class="container">
+
+    <div class="container" >
     <div class="row">
     <div class="col-md-3">
         <div class="card">
@@ -22,8 +23,18 @@
             </div>
             </div>
     </div>
+    
     <div class="col-md-9 jumbotron">
         <ul class="list-group">
+           <li class="list-group-item">{% with messages = get_flashed_messages() %}
+              {% if messages %}                    
+                    
+                        {% for message in messages %}
+                            {{ message }}
+                        {% endfor %}
+                    
+    {% endif %}
+    {% endwith %}</li>
             <li class="list-group-item">Name: {{ person.name }}</li>
             <li class="list-group-item">URL: {{ person.issuer_url }}</li>
             <li class="list-group-item">Email: {{ person.issuer_email }}</li>

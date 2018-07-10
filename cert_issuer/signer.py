@@ -1,8 +1,10 @@
 import logging
 import os
 import time
-
+import sys
 import requests
+from flask import session,current_app
+from cert_viewer import app
 
 from models import SecretManager
 
@@ -40,11 +42,15 @@ class FinalizableSigner(object):
 
     def __enter__(self):
         logging.info('Starting finalizable signer')
+        sys.stdout = open("log.txt", "w")
+        print("Starting finalizable signer")
         self.secret_manager.start()
         return self.secret_manager
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         logging.info('Stopping finalizable signer')
+        sys.stdout = open("log.txt", "w")
+        print("Stopping finalizable signer")
         self.secret_manager.stop()
 
 
@@ -69,6 +75,8 @@ def check_internet_off(secrets_file_path):
         if internet_on() is False and os.path.exists(secrets_file_path):
             break
         else:
+            print("Turn off your internet and plug in your USB to continue...")            
+            sys.stdout = open("log.txt", "w")
             print("Turn off your internet and plug in your USB to continue...")
             time.sleep(10)
     return True
@@ -80,6 +88,8 @@ def check_internet_on(secrets_file_path):
         if internet_on() is True and not os.path.exists(secrets_file_path):
             break
         else:
+            print("Turn on your internet and unplug your USB to continue...")
+            sys.stdout = open("log.txt", "w")
             print("Turn on your internet and unplug your USB to continue...")
             time.sleep(10)
     return True

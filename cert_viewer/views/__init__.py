@@ -13,7 +13,7 @@ from cert_viewer import certificate_store_bridge
 from cert_viewer import introduction_store_bridge
 from cert_viewer import verifier_bridge
 from cert_viewer import certificate_formatter
-from cert_viewer.forms import LoginForm,RegistrationForm,ProfileForm,LogoUpload,IssuerForm,IdentityForm,AdminForm
+from cert_viewer.forms import LoginForm,RegistrationForm,ProfileForm,LogoUpload,IssuerForm,IdentityForm,AdminForm,EditForm
 #from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from cert_viewer.alchemy import  Profile
@@ -21,7 +21,7 @@ from cert_viewer import db
 from flask_login import login_required, login_user, logout_user
 from cert_viewer import ALLOWED_EXTENSIONS
 DEFAULT_THEME = 'default'
-from flask import send_from_directory
+from flask import send_from_directory,current_app
 from werkzeug.utils import secure_filename
 from Naked.toolshed.shell import execute_js, muterun_js
 import json
@@ -29,6 +29,7 @@ import zipfile
 import io
 import pathlib
 import shutil
+
 
 download=0
 
@@ -191,7 +192,7 @@ def add_rules(app,config):
                 p=p.first()
                 login_user(p)
                 session['user']=p.user
-                flash('Login Successsful')
+                flash(p.user+'. You are loggged in successsfully')
                 return redirect('/profile/'+p.user)
             return render_template('/login.html',form=form)
         return render_template('/login.html',form=form)
@@ -437,6 +438,9 @@ def add_rules(app,config):
     @app.route('/issue_certs',methods=['GET', 'POST'])
     @login_required
     def issue_certs():
+        f = open('log.txt','w')
+        f.write('Click below to issue...')
+        f.close()
 
         folder = os.path.join(os.getcwd(),'cert_viewer/blockchain_certificates')
         for the_file in listdir(folder):
@@ -447,6 +451,35 @@ def add_rules(app,config):
                 #elif os.path.isdir(file_path): shutil.rmtree(file_path)
             except Exception as e:
                 print(e)
+
+        p=Profile.query.filter_by(user=session['user']).first()
+
+        import csv
+
+        with open('cert_viewer/rosters/'+p.user+'.csv', 'r') as f:
+            reader = csv.reader(f)
+            req_list = list(reader)
+        f.close()
+        print(map(json.dumps, req_list))
+
+        new_list=[]
+        req_list=req_list[1:]
+        i=1
+        for item in req_list:
+            if len(item)<3:
+                continue
+            d={}
+            d['num']=i            
+            d['name']=item[0]
+            d['pubkey']=item[1]
+            d['email']=item[2]
+            new_list.append(d)
+            i+=1        
+        print(new_list)
+
+
+
+
         folder = os.path.join(os.getcwd(),'cert_viewer/unsigned_certificates')
         for the_file in listdir(folder):
             file_path = os.path.join(folder, the_file)
@@ -457,7 +490,7 @@ def add_rules(app,config):
             except Exception as e:
                 print(e)  
         form=IssuerForm(request.form)
-        p=Profile.query.filter_by(user=session['user']).first()        
+                
         if form.validate_on_submit():
             import subprocess
             pubkey=p.issuer_public_key
@@ -501,13 +534,126 @@ def add_rules(app,config):
                         return redirect('/profile/'+p.user)
                     return "Issuing failed but certificates created successfully"
                 return "Error in instantiating"
-            return render_template("cert_issuer.html",form=form)
-        return render_template("cert_issuer.html",form=form)
-        return render_template("cert_issuer.html",form=form)
+            return render_template("cert_issuer.html",form=form, req_list= new_list)
+        #return render_template("cert_issuer.html",form=form)
+        return render_template("cert_issuer.html",form=form, req_list= new_list)
 
 
 
 
+
+    @app.route('/edit/<email>',methods=['GET', 'POST'])
+    def edit(email):
+        import csv
+        form=EditForm(request.form)
+        p=Profile.query.filter_by(user=session['user']).first()
+        
+
+        
+
+        if form.validate_on_submit():
+            
+            with open('cert_viewer/rosters/'+p.user+'.csv', 'r') as f:
+                reader = csv.reader(f)
+                req_list = list(reader)
+            f.close()
+            new_list=[]
+            new_list.append(req_list[0])
+            for item in req_list[1:]:
+                if len(item)<3:
+                    continue
+                if item[2]==email:
+                    item[0]=form.name.data
+                    item[1]=form.pubkey.data
+                    item[2]=form.email.data                    
+                new_list.append(item)
+            
+            csv.register_dialect('myDialect',quoting=csv.QUOTE_ALL,skipinitialspace=True)
+            with open('cert_viewer/rosters/'+p.user+'.csv', 'w') as f:
+                writer = csv.writer(f, dialect='myDialect')
+                for item in new_list:
+                    writer.writerow(item)
+            f.close()
+            return redirect('/issue_certs')
+        else:
+            with open('cert_viewer/rosters/'+p.user+'.csv', 'r') as f:
+                reader = csv.reader(f)
+                req_list = list(reader)
+            f.close()
+            for item in req_list[1:]:
+                if len(item)<3:
+                    continue
+                if item[2]==email:
+                    form.name.data=item[0]
+                    form.pubkey.data=item[1]
+                    form.email.data=item[2]    
+            return render_template("edit.html", form=form)
+
+    @app.route('/delete/<email>')
+    def delete(email):
+        import csv        
+        p=Profile.query.filter_by(user=session['user']).first()
+        with open('cert_viewer/rosters/'+p.user+'.csv', 'r') as f:
+            reader = csv.reader(f)
+            req_list = list(reader)
+        f.close()
+        new_list=[]
+        new_list.append(req_list[0])
+        for item in req_list[1:]:
+            if len(item)<3:
+                continue
+            if item[2]==email:
+                continue                    
+            new_list.append(item)
+        
+        csv.register_dialect('myDialect',quoting=csv.QUOTE_ALL,skipinitialspace=True)
+        with open('cert_viewer/rosters/'+p.user+'.csv', 'w') as f:
+            writer = csv.writer(f, dialect='myDialect')
+            for item in new_list:
+                writer.writerow(item)
+        f.close()
+        return redirect('/issue_certs')
+    @app.route('/add', methods=['GET', 'POST'])
+    def add():
+        import csv
+        form=EditForm(request.form)
+        p=Profile.query.filter_by(user=session['user']).first()
+        
+
+        if form.validate_on_submit():           
+            o=[]
+            o.append(form.name.data)
+            if len(form.pubkey.data)<=42:
+                pub='ecdsa-koblitz-pubkey:'+form.pubkey.data
+            o.append(pub)
+            o.append(form.email.data)            
+            csv.register_dialect('myDialect',quoting=csv.QUOTE_ALL,skipinitialspace=True)
+            with open('cert_viewer/rosters/'+p.user+'.csv', 'a') as f:
+                writer = csv.writer(f, dialect='myDialect')
+                writer.writerow(o)
+            f.close()
+            return redirect('/issue_certs')
+           
+        return render_template("edit.html", form=form)
+        
+        csv.register_dialect('myDialect',quoting=csv.QUOTE_ALL,skipinitialspace=True)
+        with open('cert_viewer/rosters/'+p.user+'.csv', 'w') as f:
+            writer = csv.writer(f, dialect='myDialect')
+            for item in new_list:
+                writer.writerow(item)
+        f.close()
+        return redirect('/issue_certs')
+
+    
+        
+
+    @app.route('/logger', methods=['GET', 'POST'])
+    def logger():
+        with open('log.txt') as f:
+            content = f.readlines()
+            print(jsonify(content))
+        f.close()
+        return str(content[0])
 
     @app.route('/issuer/<specific>')
     def issuer(specific):

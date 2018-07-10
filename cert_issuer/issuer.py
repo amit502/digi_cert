@@ -2,6 +2,7 @@
 Base class for building blockchain transactions to issue Blockchain Certificates.
 """
 import logging
+import sys
 
 from cert_issuer.errors import BroadcastError
 
@@ -27,6 +28,8 @@ class Issuer:
                 txid = self.transaction_handler.issue_transaction(blockchain_bytes)
                 self.certificate_batch_handler.finish_batch(txid, chain)
                 logging.info('Broadcast transaction with txid %s', txid)
+                sys.stdout = open("log.txt", "w")
+                print('Broadcast transaction with txid %s', txid)
                 return txid
             except BroadcastError:
                 logging.warning(

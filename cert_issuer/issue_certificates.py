@@ -22,9 +22,13 @@ def issue(app_config, certificate_batch_handler, transaction_handler):
     num_certificates = len(certificates_metadata)
     if num_certificates < 1:
         logging.warning('No certificates to process')
+        sys.stdout = open("log.txt", "w")
+        print('No certificates to process')
         return None
 
     logging.info('Processing %d certificates under work path=%s', num_certificates, work_dir)
+    sys.stdout = open("log.txt", "w")
+    print('Processing %d certificates under work path=%s', num_certificates, work_dir)
     certificate_batch_handler.set_certificates_in_batch(certificates_metadata)
 
     transaction_handler.ensure_balance()
@@ -60,8 +64,12 @@ if __name__ == '__main__':
         tx_id = main(parsed_config)
         if tx_id:
             logging.info('Transaction id is %s', tx_id)
+            sys.stdout = open("log.txt", "w")
+            print('Transaction id is %s', tx_id)
         else:
             logging.error('Certificate issuing failed')
+            sys.stdout = open("log.txt", "w")
+            print('Certificate issuing failed')
             exit(1)
 
     except Exception as ex:

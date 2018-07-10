@@ -92,6 +92,21 @@ class LoginForm(Form):
     password = PasswordField(
         'password', [
             validators.required()])
+
+class EditForm(FlaskForm):
+    name = StringField(
+        'Name', [
+            validators.required(), validators.length(
+                max=200)])
+    
+    email = StringField(
+        'Email', [
+            validators.required(), validators.length(
+                max=200)])
+    pubkey = StringField(
+        'Ethereum Public Address', [
+            validators.required(), validators.length(
+                max=63)])
     
 class SimpleRegistrationForm(Form):
     first_name = StringField(
