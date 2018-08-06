@@ -63,7 +63,7 @@ def import_key(secrets_file_path):
 def internet_on():
     """Pings Google to see if the internet is on. If online, returns true. If offline, returns false."""
     try:
-        requests.get('http://google.com')
+        requests.get('https://google.com')
         return True
     except requests.exceptions.RequestException:
         return False
@@ -85,9 +85,11 @@ def check_internet_off(secrets_file_path):
 def check_internet_on(secrets_file_path):
     """If internet on and USB unplugged, returns true. Else, continues to wait..."""
     while True:
-        if internet_on() is True and not os.path.exists(secrets_file_path):
+        if internet_on() is True and not os.path.exists(secrets_file_path):        
+            print("yes")
             break
         else:
+            print("no")
             print("Turn on your internet and unplug your USB to continue...")
             sys.stdout = open("log.txt", "w")
             print("Turn on your internet and unplug your USB to continue...")

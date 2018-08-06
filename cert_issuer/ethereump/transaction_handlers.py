@@ -57,7 +57,9 @@ class EthereumTransactionHandler(TransactionHandler):
     def issue_transaction(self, blockchain_bytes):
         eth_data_field = b2h(blockchain_bytes)
         prepared_tx = self.create_transaction(blockchain_bytes)
+        print(self.issuing_address)
         signed_tx = self.sign_transaction(prepared_tx)
+        print(self.issuing_address)
         self.verify_transaction(signed_tx, eth_data_field)
         txid = self.broadcast_transaction(signed_tx)
         return txid

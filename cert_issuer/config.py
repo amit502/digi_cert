@@ -49,7 +49,7 @@ def add_arguments(p):
     p.add_argument('--chain', default='bitcoin_regtest',
                    help='Which chain to use. Default is bitcoin_regtest (which is how the docker container is configured). Other options are bitcoin_testnet bitcoin_mainnet, mockchain, ethereum_mainnet, ethereum_ropsten, ethereum_testnet')
 
-    p.add_argument('--safe_mode', dest='safe_mode', default=True, action='store_true',
+    p.add_argument('--safe_mode', dest='safe_mode', default=False, action='store_true',
                    help='Used to make sure your private key is not plugged in with the wifi.')
     p.add_argument('--no_safe_mode', dest='safe_mode', default=False, action='store_false',
                    help='Turns off safe mode. Only change this option for testing or unit testing.')

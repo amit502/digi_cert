@@ -249,6 +249,7 @@ def create_anchored_data_verification_group(signatures, chain, transaction_info,
     for s in signatures:
         if s.signature_type == SignatureType.signed_transaction:
             if s.merkle_proof:
+                print("merkle verification started")
                 steps = [ReceiptIntegrityChecker(s.merkle_proof.proof_json),
                          NormalizedJsonLdIntegrityChecker(s.content_to_verify, s.merkle_proof.target_hash,
                                                           detect_unmapped_fields=detect_unmapped_fields)]
@@ -259,6 +260,7 @@ def create_anchored_data_verification_group(signatures, chain, transaction_info,
                     steps=steps,
                     name='Checking certificate has not been tampered with')
             else:
+                print("binaary checker");
                 anchored_data_verification = VerificationGroup(
                     steps=[BinaryFileIntegrityChecker(s.content_to_verify, transaction_info)],
                     name='Checking certificate has not been tampered with')

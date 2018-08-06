@@ -71,9 +71,9 @@ class CertificateBatchHandler(object):
             self.certificate_handler.validate_certificate(metadata)
 
         # sign batch
-        with FinalizableSigner(self.secret_manager) as signer:
+        '''with FinalizableSigner(self.secret_manager) as signer:
             for _, metadata in self.certificates_to_issue.items():
-                self.certificate_handler.sign_certificate(signer, metadata)
+                self.certificate_handler.sign_certificate(signer, metadata)'''
 
         self.merkle_tree.populate(self.get_certificate_generator())
         logging.info('here is the op_return_code data: %s', b2h(self.merkle_tree.get_blockchain_data()))

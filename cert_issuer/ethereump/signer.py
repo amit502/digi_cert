@@ -43,10 +43,10 @@ class EthereumSigner(Signer):
 			
 			
 class FileSecretManager(SecretManager):
-    def __init__(self, signer, path_to_secret, safe_mode=True, issuing_address=None):
+    def __init__(self, signer, path_to_secret, safe_mode=False, issuing_address=None):
         super().__init__(signer)
         self.path_to_secret = path_to_secret
-        self.safe_mode = safe_mode
+        self.safe_mode = False
         self.issuing_address = issuing_address
 
     def start(self):

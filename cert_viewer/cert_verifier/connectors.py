@@ -238,7 +238,8 @@ def get_issuer_info(certificate_model):
     #ipfs_hash_from_contract=;
     if not int(issuer_contract.get(certificate_model.issuer.id)):
         print("hey")
-        sys.exit("The ipfs hash of the issuer is  not valid!!!!")
+        #sys.exit("The ipfs hash of the issuer is  not valid!!!!")
+        return "fraud"
     print("contract success")
     path=os.path.join(os.getcwd(), 'cert_viewer/static/js/file.js')
     response = muterun_js(path,certificate_model.issuer.id)

@@ -20,25 +20,30 @@ import sys
 def verify_certificate(certificate_model, options={}):
     # lookup issuer-hosted information
     issuer_info = connectors.get_issuer_info(certificate_model)
+    if issuer_info !='fraud':
 
-    # lookup transaction information
-    connector = connectors.createTransactionLookupConnector(certificate_model.chain, options)
-    
-    print("hello")
-    print(certificate_model.txid)
-    print("hello")
-    transaction_info = connector.lookup_tx(certificate_model.txid)
-    print("hello")
-    print(transaction_info)
-    # create verification plan
-    verification_steps = create_verification_steps(certificate_model, transaction_info, issuer_info,
-                                                   certificate_model.chain)
+        # lookup transaction information
+        connector = connectors.createTransactionLookupConnector(certificate_model.chain, options)
 
-    verification_steps.execute()
-    messages = []
-    verification_steps.add_detailed_status(messages)
-    for message in messages:
-        print(message['name'] + ',' + str(message['status']))
+        print("hello")
+        print(certificate_model.txid)
+        print("hello")
+        transaction_info = connector.lookup_tx(certificate_model.txid)
+        print("hello")
+        print(transaction_info)
+        # create verification plan
+        verification_steps = create_verification_steps(certificate_model, transaction_info, issuer_info,
+                                                       certificate_model.chain)
+
+        verification_steps.execute()
+        messages = []
+        verification_steps.add_detailed_status(messages)
+        for message in messages:
+            print(message['name'] + ',' + str(message['status']))
+    else:
+        messages = [{'name':'The issuer was not verified while issuing this certificate','status':'Failed'}]
+        for message in messages:
+            print(message['name'] + ',' + str(message['status']))
 
     return messages
 

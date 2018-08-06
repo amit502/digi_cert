@@ -507,7 +507,7 @@ def add_rules(app,config):
             signaturepath=signaturepath[1:]
             print(signaturepath)
             path=os.path.join(os.getcwd(),'cert_tools/conf.ini')         
-            script=['python',"create_v2_certificate_template.py",'-c',path,'--issuer_public_key',pubkey,'-r',"To be updated",'-d',"akjbf",'--data_dir',"cert_viewer",'--issuer_logo_file',logopath,'--cert_image_file',imagepath,'--issuer_signature_file',signaturepath,'--issuer_url',"https://www.ioe.edu.np",'--issuer_name',p.name,'--issuer_id',p.issuer_id,'--issuer_key',"pqrst",'--certificate_title',"Certificate of Achievement",'--criteria_narrative',p.criteria_narrative,'--badge_id',p.badge_id,'--issuer_signature_lines',"Signature of TU"]
+            script=['python',"create_v2_certificate_template.py",'-c',path,'--issuer_public_key',pubkey,'-r',"To be updated",'-d',"akjbf",'--certificate_description',p.certificate_description,'--data_dir',"cert_viewer",'--issuer_logo_file',logopath,'--cert_image_file',imagepath,'--issuer_signature_file',signaturepath,'--issuer_url',"https://www.ioe.edu.np",'--issuer_name',p.name,'--issuer_id',p.issuer_id,'--issuer_key',"pqrst",'--certificate_title',"Certificate of Achievement",'--criteria_narrative',p.criteria_narrative,'--badge_id',p.badge_id,'--issuer_signature_lines',"Signature of TU"]
             print(script)
             status1=subprocess.call(script,shell=True)
             print("status1:",status1)

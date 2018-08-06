@@ -10,6 +10,10 @@ function renderResponse(i, len, data) {
         total = len - 1;
         message = data.name;
         value = data.status;
+        if(message=='The issuer was not verified while issuing this certificate')
+        {
+            $("#progress-msg").html($("#progress-msg").html()+'The issuer was not verified while issuing this certificate'+'...'+value+'<br>');
+        }
         if (i != len - 1) {
             $("#progress-msg").html($("#progress-msg").html() + 'Step ' + count.toString() + ' of ' + total.toString() + "... " + message + '</span>');
         }
